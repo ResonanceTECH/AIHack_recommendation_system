@@ -6,7 +6,6 @@ import {
   Box,
   Chip,
   Button,
-  Grid,
   Divider,
 } from '@mui/material';
 import {
@@ -60,7 +59,7 @@ const ActivePrescriptions: React.FC<ActivePrescriptionsProps> = ({
         <Typography variant="h6" gutterBottom>
           Текущие назначения
         </Typography>
-        
+
         {prescriptions.length === 0 ? (
           <Box textAlign="center" sx={{ py: 4 }}>
             <Assignment sx={{ fontSize: 48, color: 'text.secondary', mb: 2 }} />
@@ -75,11 +74,11 @@ const ActivePrescriptions: React.FC<ActivePrescriptionsProps> = ({
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
                   <Box sx={{ flex: 1 }}>
                     <Typography variant="h6" gutterBottom>
-                      {prescription.recommended_medications?.[0]?.medication || 'Назначение'}
+                      {prescription.recommended_medications?.[0]?.name || 'Назначение'}
                     </Typography>
                     <Typography variant="body2" color="text.secondary" paragraph>
-                      {prescription.recommended_medications?.[0]?.dosage} | 
-                      {prescription.recommended_medications?.[0]?.frequency} | 
+                      {prescription.recommended_medications?.[0]?.dosage} |
+                      {prescription.recommended_medications?.[0]?.frequency} |
                       {prescription.duration}
                     </Typography>
                     <Typography variant="body2" paragraph>
@@ -95,7 +94,7 @@ const ActivePrescriptions: React.FC<ActivePrescriptionsProps> = ({
                     />
                   </Box>
                 </Box>
-                
+
                 {prescription.warnings && prescription.warnings.length > 0 && (
                   <Box sx={{ mb: 1 }}>
                     {prescription.warnings.map((warning, index) => (
@@ -109,7 +108,7 @@ const ActivePrescriptions: React.FC<ActivePrescriptionsProps> = ({
                     ))}
                   </Box>
                 )}
-                
+
                 <Box sx={{ display: 'flex', gap: 1, mt: 2 }}>
                   <Button
                     size="small"
@@ -126,7 +125,7 @@ const ActivePrescriptions: React.FC<ActivePrescriptionsProps> = ({
                     Редактировать
                   </Button>
                 </Box>
-                
+
                 <Divider sx={{ mt: 2 }} />
               </Box>
             ))}
