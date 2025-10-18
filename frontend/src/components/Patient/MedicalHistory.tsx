@@ -7,19 +7,7 @@ import {
   Grid,
   Chip,
   Divider,
-  Timeline,
-  TimelineItem,
-  TimelineSeparator,
-  TimelineConnector,
-  TimelineContent,
-  TimelineDot,
 } from '@mui/material';
-import {
-  LocalHospital,
-  Assignment,
-  Warning,
-  CheckCircle,
-} from '@mui/icons-material';
 import { Patient } from '../../types/patient';
 
 interface MedicalHistoryProps {
@@ -27,13 +15,6 @@ interface MedicalHistoryProps {
 }
 
 const MedicalHistory: React.FC<MedicalHistoryProps> = ({ patient }) => {
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('ru-RU', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
-  };
 
   return (
     <Card>
@@ -54,8 +35,8 @@ const MedicalHistory: React.FC<MedicalHistoryProps> = ({ patient }) => {
                   <strong>Возраст:</strong> {patient.age} лет
                 </Typography>
                 <Typography variant="body2" paragraph>
-                  <strong>Пол:</strong> {patient.gender === 'male' ? 'Мужской' : 
-                   patient.gender === 'female' ? 'Женский' : 'Другой'}
+                  <strong>Пол:</strong> {patient.gender === 'male' ? 'Мужской' :
+                    patient.gender === 'female' ? 'Женский' : 'Другой'}
                 </Typography>
                 {patient.weight && (
                   <Typography variant="body2" paragraph>
@@ -118,31 +99,31 @@ const MedicalHistory: React.FC<MedicalHistoryProps> = ({ patient }) => {
                   <Typography variant="body2" paragraph>
                     <strong>Курение:</strong> {
                       patient.lifestyle_factors.smoking.status === 'never' ? 'Никогда не курил' :
-                      patient.lifestyle_factors.smoking.status === 'former' ? 'Бывший курильщик' :
-                      'Курит сейчас'
+                        patient.lifestyle_factors.smoking.status === 'former' ? 'Бывший курильщик' :
+                          'Курит сейчас'
                     }
-                    {patient.lifestyle_factors.smoking.pack_years && 
+                    {patient.lifestyle_factors.smoking.pack_years &&
                       ` (${patient.lifestyle_factors.smoking.pack_years} пачко-лет)`
                     }
                   </Typography>
                   <Typography variant="body2" paragraph>
                     <strong>Алкоголь:</strong> {
                       patient.lifestyle_factors.alcohol.status === 'never' ? 'Не употребляет' :
-                      patient.lifestyle_factors.alcohol.status === 'occasional' ? 'Редко' :
-                      'Регулярно'
+                        patient.lifestyle_factors.alcohol.status === 'occasional' ? 'Редко' :
+                          'Регулярно'
                     }
-                    {patient.lifestyle_factors.alcohol.units_per_week && 
+                    {patient.lifestyle_factors.alcohol.units_per_week &&
                       ` (${patient.lifestyle_factors.alcohol.units_per_week} единиц/неделя)`
                     }
                   </Typography>
                   <Typography variant="body2" paragraph>
                     <strong>Физическая активность:</strong> {
                       patient.lifestyle_factors.physical_activity.level === 'sedentary' ? 'Малоподвижный' :
-                      patient.lifestyle_factors.physical_activity.level === 'light' ? 'Легкая' :
-                      patient.lifestyle_factors.physical_activity.level === 'moderate' ? 'Умеренная' :
-                      'Высокая'
+                        patient.lifestyle_factors.physical_activity.level === 'light' ? 'Легкая' :
+                          patient.lifestyle_factors.physical_activity.level === 'moderate' ? 'Умеренная' :
+                            'Высокая'
                     }
-                    {patient.lifestyle_factors.physical_activity.hours_per_week && 
+                    {patient.lifestyle_factors.physical_activity.hours_per_week &&
                       ` (${patient.lifestyle_factors.physical_activity.hours_per_week} часов/неделя)`
                     }
                   </Typography>
@@ -195,9 +176,9 @@ const MedicalHistory: React.FC<MedicalHistoryProps> = ({ patient }) => {
                   <Typography variant="body2" paragraph>
                     <strong>Соблюдение режима:</strong> {
                       patient.social_factors.compliance.level === 'excellent' ? 'Отличное' :
-                      patient.social_factors.compliance.level === 'good' ? 'Хорошее' :
-                      patient.social_factors.compliance.level === 'fair' ? 'Удовлетворительное' :
-                      'Плохое'
+                        patient.social_factors.compliance.level === 'good' ? 'Хорошее' :
+                          patient.social_factors.compliance.level === 'fair' ? 'Удовлетворительное' :
+                            'Плохое'
                     }
                   </Typography>
                   {patient.social_factors.compliance.notes && (
