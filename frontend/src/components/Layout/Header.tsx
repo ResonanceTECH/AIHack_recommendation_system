@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   AppBar,
   Toolbar,
@@ -8,51 +8,26 @@ import {
   IconButton,
   Menu,
   MenuItem,
+  Avatar,
+  Divider,
 } from '@mui/material';
 import {
   AccountCircle,
-  ExitToApp,
+  ChevronRight,
   Dashboard,
   People,
   Assignment,
-  Settings,
+  Analytics,
 } from '@mui/icons-material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import NotificationCenter from '../Notifications/NotificationCenter';
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user, logout } = useAuth();
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-
-  // Моковые уведомления
-  const [notifications, setNotifications] = React.useState([
-    {
-      id: '1',
-      type: 'info' as const,
-      title: 'Новое назначение',
-      message: 'Создано новое назначение для пациента Иванов И.И.',
-      timestamp: new Date(Date.now() - 1000 * 60 * 30), // 30 минут назад
-      read: false,
-    },
-    {
-      id: '2',
-      type: 'warning' as const,
-      title: 'Требуется контроль МНО',
-      message: 'Пациенту Петров П.П. необходимо проверить МНО',
-      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2), // 2 часа назад
-      read: false,
-    },
-    {
-      id: '3',
-      type: 'success' as const,
-      title: 'Назначение завершено',
-      message: 'Курс лечения для Сидоров С.С. успешно завершен',
-      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24), // 1 день назад
-      read: true,
-    },
-  ]);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -64,118 +39,173 @@ const Header: React.FC = () => {
 
   const handleLogout = () => {
     logout();
-    navigate('/');
     handleClose();
+    navigate('/login');
   };
 
-  const handleMarkAsRead = (id: string) => {
-    setNotifications(notifications.map(n =>
-      n.id === id ? { ...n, read: true } : n
-    ));
-  };
-
-  const handleMarkAllAsRead = () => {
-    setNotifications(notifications.map(n => ({ ...n, read: true })));
-  };
-
-  const handleClearAll = () => {
-    setNotifications([]);
-  };
+  const navigationItems = [
+    { label: 'Главная', path: '/', icon: <Dashboard /> },
+    { label: 'Пациенты', path: '/patients', icon: <People /> },
+    { label: 'Назначения', path: '/prescriptions', icon: <Assignment /> },
+    { label: 'Аналитика', path: '/analytics', icon: <Analytics /> },
+  ];
 
   return (
-    <AppBar position="static">
-      <Toolbar>
-        <Typography
-          variant="h6"
-          component="div"
-          sx={{ flexGrow: 1, cursor: 'pointer' }}
+    <AppBar position="static" elevation={0} sx={{ backgroundColor: '#ffffff' }}>
+      <Toolbar sx={{ minHeight: '64px', px: { xs: 2, md: 4 } }}>
+        {/* Логотип с подчеркиванием */}
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            cursor: 'pointer',
+            mr: 4,
+          }}
           onClick={() => navigate('/')}
         >
-          MedAI
-        </Typography>
-
-        {user && (
-          <Box sx={{ display: 'flex', gap: 1 }}>
-            <Button
-              color="inherit"
-              startIcon={<Dashboard />}
-              onClick={() => navigate('/dashboard')}
-            >
-              Главная
-            </Button>
-            <Button
-              color="inherit"
-              startIcon={<People />}
-              onClick={() => navigate('/patients')}
-            >
-              Пациенты
-            </Button>
-            <Button
-              color="inherit"
-              startIcon={<Assignment />}
-              onClick={() => navigate('/prescriptions')}
-            >
-              Назначения
-            </Button>
-
-            <NotificationCenter
-              notifications={notifications}
-              onMarkAsRead={handleMarkAsRead}
-              onMarkAllAsRead={handleMarkAllAsRead}
-              onClearAll={handleClearAll}
+          <Typography
+            variant="h5"
+            component="div"
+            sx={{
+              fontFamily: 'CeraPro, Roboto, Arial, sans-serif',
+              fontWeight: 700,
+              color: '#2c2c2c',
+              position: 'relative',
+            }}
+          >
+            MedAI
+            <Box
+              sx={{
+                position: 'absolute',
+                bottom: -2,
+                left: '50%',
+                transform: 'translateX(-50%)',
+                width: '60%',
+                height: '2px',
+                backgroundColor: '#1976d2',
+              }}
             />
+          </Typography>
+        </Box>
 
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleMenu}
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorEl}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-            >
-              <MenuItem onClick={() => { navigate('/settings'); handleClose(); }}>
-                <Settings sx={{ mr: 1 }} />
-                Настройки
-              </MenuItem>
-              <MenuItem onClick={handleLogout}>
-                <ExitToApp sx={{ mr: 1 }} />
-                Выйти
-              </MenuItem>
-            </Menu>
-          </Box>
-        )}
-
-        {!user && (
-          <Box sx={{ display: 'flex', gap: 1 }}>
-            <Button color="inherit" onClick={() => navigate('/login')}>
-              Вход
-            </Button>
+        {/* Навигационное меню */}
+        <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 1 }}>
+          {navigationItems.map((item) => (
             <Button
-              variant="contained"
-              color="secondary"
-              onClick={() => navigate('/register')}
+              key={item.path}
+              onClick={() => navigate(item.path)}
+              startIcon={item.icon}
+              sx={{
+                color: location.pathname === item.path ? '#1976d2' : '#2c2c2c',
+                textTransform: 'none',
+                fontWeight: location.pathname === item.path ? 600 : 400,
+                px: 2,
+                py: 1,
+                borderRadius: 1,
+                '&:hover': {
+                  backgroundColor: '#f5f5f5',
+                },
+                borderBottom: location.pathname === item.path ? '2px solid #1976d2' : 'none',
+              }}
             >
-              Регистрация
+              {item.label}
             </Button>
-          </Box>
-        )}
+          ))}
+        </Box>
+
+        {/* Правая часть с уведомлениями и пользователем */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, ml: 'auto' }}>
+          <NotificationCenter
+            notifications={[]}
+            onMarkAsRead={() => { }}
+            onMarkAllAsRead={() => { }}
+            onClearAll={() => { }}
+          />
+
+          {user ? (
+            <>
+              <IconButton
+                size="large"
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleMenu}
+                sx={{
+                  color: '#2c2c2c',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 1,
+                  px: 2,
+                  py: 1,
+                  borderRadius: 1,
+                  '&:hover': {
+                    backgroundColor: '#f5f5f5',
+                  },
+                }}
+              >
+                <Avatar sx={{ width: 24, height: 24, fontSize: '0.875rem' }}>
+                  {user.full_name?.charAt(0) || 'U'}
+                </Avatar>
+                <Typography variant="body2" sx={{ color: '#2c2c2c' }}>
+                  {user.full_name || 'Пользователь'}
+                </Typography>
+                <ChevronRight sx={{ fontSize: 16 }} />
+              </IconButton>
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+                PaperProps={{
+                  sx: {
+                    mt: 1,
+                    minWidth: 200,
+                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                    border: '1px solid #e0e0e0',
+                  },
+                }}
+              >
+                <MenuItem onClick={() => { navigate('/profile'); handleClose(); }}>
+                  Профиль
+                </MenuItem>
+                <MenuItem onClick={() => { navigate('/settings'); handleClose(); }}>
+                  Настройки
+                </MenuItem>
+                <Divider />
+                <MenuItem onClick={handleLogout} sx={{ color: '#dc004e' }}>
+                  Выйти
+                </MenuItem>
+              </Menu>
+            </>
+          ) : (
+            <Button
+              onClick={() => navigate('/login')}
+              startIcon={<AccountCircle />}
+              endIcon={<ChevronRight />}
+              sx={{
+                color: '#2c2c2c',
+                textTransform: 'none',
+                px: 2,
+                py: 1,
+                borderRadius: 1,
+                '&:hover': {
+                  backgroundColor: '#f5f5f5',
+                },
+              }}
+            >
+              Войти
+            </Button>
+          )}
+        </Box>
       </Toolbar>
     </AppBar>
   );
