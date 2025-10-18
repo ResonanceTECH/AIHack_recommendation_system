@@ -1,20 +1,21 @@
 version: '3.8'
 
 services:
-  # PostgreSQL Database
+  # MySQL Database
   db:
-    image: postgres:15
+    image: mysql:8.0
     container_name: medai-db
     environment:
-      POSTGRES_DB: medai_db
-      POSTGRES_USER: medai_user
-      POSTGRES_PASSWORD: medai_password
+      MYSQL_DATABASE: medai_db
+      MYSQL_USER: medai_user
+      MYSQL_PASSWORD: medai_password
+      MYSQL_ROOT_PASSWORD: root_password
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - mysql_data:/var/lib/mysql
     ports:
-      - "5432:5432"
+      - "3306:3306"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U medai_user -d medai_db"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "medai_user", "-pmedai_password"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -28,7 +29,7 @@ services:
       dockerfile: Dockerfile
     container_name: medai-backend
     environment:
-      - DATABASE_URL=postgresql://medai_user:medai_password@db:5432/medai_db
+      - DATABASE_URL=mysql+pymysql://medai_user:medai_password@db:3306/medai_db
       - SECRET_KEY=your-secret-key-change-in-production
       - ALGORITHM=HS256
       - ACCESS_TOKEN_EXPIRE_MINUTES=30
@@ -65,7 +66,7 @@ services:
     restart: unless-stopped
 
 volumes:
-  postgres_data:
+  mysql_data:
     driver: local
   backend_logs:
     driver: local
