@@ -17,7 +17,6 @@ import {
     MenuItem,
     Grid,
     IconButton,
-    Alert,
 } from '@mui/material';
 import {
     Add,
@@ -58,10 +57,10 @@ const SideEffectsTracker: React.FC<SideEffectsTrackerProps> = ({
     const [formData, setFormData] = useState({
         medication: '',
         effect: '',
-        severity: 'mild' as const,
+        severity: 'mild' as 'mild' | 'moderate' | 'severe',
         date: new Date().toISOString().split('T')[0],
         duration: '',
-        status: 'active' as const,
+        status: 'active' as 'active' | 'monitoring' | 'resolved',
         notes: '',
     });
 
@@ -128,18 +127,6 @@ const SideEffectsTracker: React.FC<SideEffectsTrackerProps> = ({
         }
     };
 
-    const getStatusColor = (status: string) => {
-        switch (status) {
-            case 'active':
-                return 'error';
-            case 'resolved':
-                return 'success';
-            case 'monitoring':
-                return 'warning';
-            default:
-                return 'default';
-        }
-    };
 
     const activeSideEffects = sideEffects.filter(e => e.status === 'active');
     const resolvedSideEffects = sideEffects.filter(e => e.status === 'resolved');
