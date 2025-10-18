@@ -1,0 +1,309 @@
+/* Медицинские специфичные стили */
+
+/* Карточки пациентов */
+.patient-card {
+  border-left: 4px solid var(--medical-primary);
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  transition: all 0.3s ease;
+}
+
+.patient-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(25, 118, 210, 0.15);
+}
+
+.patient-card.critical {
+  border-left-color: var(--medical-danger);
+  background: linear-gradient(135deg, #ffebee 0%, #ffffff 100%);
+}
+
+.patient-card.warning {
+  border-left-color: var(--medical-warning);
+  background: linear-gradient(135deg, #fff3e0 0%, #ffffff 100%);
+}
+
+.patient-card.success {
+  border-left-color: var(--medical-secondary);
+  background: linear-gradient(135deg, #e8f5e8 0%, #ffffff 100%);
+}
+
+/* Назначения */
+.prescription-card {
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  background: var(--background-primary);
+  transition: all 0.3s ease;
+}
+
+.prescription-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.prescription-card.active {
+  border-left: 4px solid var(--status-active);
+}
+
+.prescription-card.completed {
+  border-left: 4px solid var(--status-completed);
+}
+
+.prescription-card.cancelled {
+  border-left: 4px solid var(--status-cancelled);
+  opacity: 0.7;
+}
+
+.prescription-card.draft {
+  border-left: 4px solid var(--status-draft);
+  background: var(--background-secondary);
+}
+
+/* Статусы */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-badge.active {
+  background-color: var(--status-active);
+  color: white;
+}
+
+.status-badge.completed {
+  background-color: var(--status-completed);
+  color: white;
+}
+
+.status-badge.cancelled {
+  background-color: var(--status-cancelled);
+  color: white;
+}
+
+.status-badge.draft {
+  background-color: var(--status-draft);
+  color: white;
+}
+
+/* Лабораторные показатели */
+.lab-value {
+  font-weight: 600;
+  font-size: 1.25rem;
+}
+
+.lab-value.normal {
+  color: var(--medical-secondary);
+}
+
+.lab-value.warning {
+  color: var(--medical-warning);
+}
+
+.lab-value.critical {
+  color: var(--medical-danger);
+}
+
+.lab-range {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+/* Мониторинг */
+.monitoring-chart {
+  background: var(--background-primary);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.monitoring-chart .chart-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: var(--text-primary);
+}
+
+.monitoring-chart .chart-value {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.monitoring-chart .chart-value.normal {
+  color: var(--medical-secondary);
+}
+
+.monitoring-chart .chart-value.warning {
+  color: var(--medical-warning);
+}
+
+.monitoring-chart .chart-value.critical {
+  color: var(--medical-danger);
+}
+
+/* Предупреждения */
+.warning-box {
+  background: linear-gradient(135deg, #fff3e0 0%, #ffffff 100%);
+  border: 1px solid var(--medical-warning);
+  border-left: 4px solid var(--medical-warning);
+  border-radius: 8px;
+  padding: 16px;
+  margin: 16px 0;
+}
+
+.warning-box .warning-title {
+  font-weight: 600;
+  color: var(--medical-warning);
+  margin-bottom: 8px;
+}
+
+.warning-box .warning-content {
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+
+/* Критические уведомления */
+.critical-box {
+  background: linear-gradient(135deg, #ffebee 0%, #ffffff 100%);
+  border: 1px solid var(--medical-danger);
+  border-left: 4px solid var(--medical-danger);
+  border-radius: 8px;
+  padding: 16px;
+  margin: 16px 0;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(244, 67, 54, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(244, 67, 54, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(244, 67, 54, 0);
+  }
+}
+
+.critical-box .critical-title {
+  font-weight: 600;
+  color: var(--medical-danger);
+  margin-bottom: 8px;
+}
+
+.critical-box .critical-content {
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+
+/* Медицинские иконки */
+.medical-icon {
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+}
+
+.medical-icon.primary {
+  color: var(--medical-primary);
+}
+
+.medical-icon.secondary {
+  color: var(--medical-secondary);
+}
+
+.medical-icon.warning {
+  color: var(--medical-warning);
+}
+
+.medical-icon.danger {
+  color: var(--medical-danger);
+}
+
+/* Формы для медицинских данных */
+.medical-form {
+  background: var(--background-primary);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.medical-form .form-section {
+  margin-bottom: 32px;
+}
+
+.medical-form .form-section:last-child {
+  margin-bottom: 0;
+}
+
+.medical-form .form-section-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.medical-form .form-group {
+  margin-bottom: 20px;
+}
+
+.medical-form .form-group:last-child {
+  margin-bottom: 0;
+}
+
+.medical-form .form-label {
+  display: block;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.medical-form .form-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.medical-form .form-input:focus {
+  outline: none;
+  border-color: var(--medical-primary);
+  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
+}
+
+.medical-form .form-textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* Адаптивность для медицинских компонентов */
+@media (max-width: 768px) {
+  .patient-card {
+    margin-bottom: 16px;
+  }
+  
+  .prescription-card {
+    padding: 12px;
+  }
+  
+  .monitoring-chart {
+    padding: 16px;
+  }
+  
+  .medical-form {
+    padding: 16px;
+  }
+  
+  .medical-form .form-section {
+    margin-bottom: 24px;
+  }
+}
