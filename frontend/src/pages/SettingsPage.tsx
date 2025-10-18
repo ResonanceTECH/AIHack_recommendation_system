@@ -17,7 +17,6 @@ import {
     Select,
     MenuItem,
     Divider,
-    Alert,
     Snackbar,
 } from '@mui/material';
 import {
@@ -95,7 +94,7 @@ const SettingsPage: React.FC = () => {
         sessionTimeout: 30,
     });
 
-    const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
         setTabValue(newValue);
     };
 
