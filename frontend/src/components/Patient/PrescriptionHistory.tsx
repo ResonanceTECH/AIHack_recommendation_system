@@ -26,7 +26,6 @@ import {
   Visibility,
   Edit,
   Assignment,
-  FilterList,
 } from '@mui/icons-material';
 import { Prescription } from '../../types/prescription';
 
@@ -48,11 +47,11 @@ const PrescriptionHistory: React.FC<PrescriptionHistoryProps> = ({
   const filteredPrescriptions = prescriptions
     .filter((prescription) => {
       const matchesSearch = prescription.recommended_medications?.some(med =>
-        med.medication.toLowerCase().includes(searchTerm.toLowerCase())
+        med.name.toLowerCase().includes(searchTerm.toLowerCase())
       ) || prescription.instructions?.toLowerCase().includes(searchTerm.toLowerCase());
-      
+
       const matchesStatus = statusFilter === 'all' || prescription.status === statusFilter;
-      
+
       return matchesSearch && matchesStatus;
     })
     .sort((a, b) => {
@@ -60,8 +59,8 @@ const PrescriptionHistory: React.FC<PrescriptionHistoryProps> = ({
         case 'date':
           return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
         case 'medication':
-          const medA = a.recommended_medications?.[0]?.medication || '';
-          const medB = b.recommended_medications?.[0]?.medication || '';
+          const medA = a.recommended_medications?.[0]?.name || '';
+          const medB = b.recommended_medications?.[0]?.name || '';
           return medA.localeCompare(medB);
         case 'status':
           return a.status.localeCompare(b.status);
@@ -169,7 +168,7 @@ const PrescriptionHistory: React.FC<PrescriptionHistoryProps> = ({
                   </TableCell>
                   <TableCell>
                     <Typography variant="body2" fontWeight="medium">
-                      {prescription.recommended_medications?.[0]?.medication || 'Не указано'}
+                      {prescription.recommended_medications?.[0]?.name || 'Не указано'}
                     </Typography>
                     {prescription.is_ai_generated && (
                       <Chip
