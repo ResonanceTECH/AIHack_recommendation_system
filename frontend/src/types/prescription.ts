@@ -20,11 +20,14 @@ export interface Prescription {
 }
 
 export interface RecommendedMedication {
+  id: number;
   name: string;
   dosage: string;
   frequency: string;
   duration: string;
   instructions: string;
+  evidence_level: 'A' | 'B' | 'C' | 'D';
+  justification: string;
   contraindications?: string[];
   side_effects?: string[];
 }
