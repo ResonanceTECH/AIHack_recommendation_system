@@ -7,8 +7,6 @@ import {
     LinearProgress,
     Chip,
     Grid,
-    IconButton,
-    Tooltip,
 } from '@mui/material';
 import {
     CheckCircle,
@@ -36,7 +34,6 @@ interface ComplianceTrackerProps {
 
 const ComplianceTracker: React.FC<ComplianceTrackerProps> = ({
     complianceData,
-    onUpdateCompliance,
 }) => {
     const getAdherenceColor = (level: string) => {
         switch (level) {
