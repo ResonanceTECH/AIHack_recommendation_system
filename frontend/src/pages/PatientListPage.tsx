@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Container,
   Typography,
@@ -25,7 +25,7 @@ import {
   Email,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-import { useQuery, useMutation, useQueryClient } from 'react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { patientApi } from '../services/api';
 import { Patient, PatientCreate } from '../types/patient';
 import Header from '../components/Layout/Header';
@@ -51,11 +51,15 @@ const PatientListPage: React.FC = () => {
     previous_anticoagulants: [],
   });
 
-  const { data: patients = [], isLoading, error } = useQuery('patients', patientApi.getPatients);
+  const { data: patients = [], isLoading, error } = useQuery({
+    queryKey: ['patients'],
+    queryFn: patientApi.getPatients
+  });
 
-  const createMutation = useMutation(patientApi.createPatient, {
+  const createMutation = useMutation({
+    mutationFn: patientApi.createPatient,
     onSuccess: () => {
-      queryClient.invalidateQueries('patients');
+      queryClient.invalidateQueries({ queryKey: ['patients'] });
       setOpen(false);
       setFormData({
         full_name: '',
@@ -75,21 +79,20 @@ const PatientListPage: React.FC = () => {
     },
   });
 
-  const updateMutation = useMutation(
-    ({ id, data }: { id: number; data: Partial<PatientCreate> }) =>
+  const updateMutation = useMutation({
+    mutationFn: ({ id, data }: { id: number; data: Partial<PatientCreate> }) =>
       patientApi.updatePatient(id, data),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries('patients');
-        setOpen(false);
-        setEditingPatient(null);
-      },
-    }
-  );
-
-  const deleteMutation = useMutation(patientApi.deletePatient, {
     onSuccess: () => {
-      queryClient.invalidateQueries('patients');
+      queryClient.invalidateQueries({ queryKey: ['patients'] });
+      setOpen(false);
+      setEditingPatient(null);
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: patientApi.deletePatient,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['patients'] });
     },
   });
 
@@ -203,25 +206,25 @@ const PatientListPage: React.FC = () => {
                       </IconButton>
                     </Box>
                   </Box>
-                  
+
                   <Typography variant="body2" color="text.secondary" gutterBottom>
                     Возраст: {patient.age} лет, {patient.gender === 'male' ? 'Мужской' : 'Женский'}
                   </Typography>
-                  
+
                   {patient.phone && (
                     <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                       <Phone sx={{ fontSize: 16, mr: 1 }} />
                       <Typography variant="body2">{patient.phone}</Typography>
                     </Box>
                   )}
-                  
+
                   {patient.email && (
                     <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                       <Email sx={{ fontSize: 16, mr: 1 }} />
                       <Typography variant="body2">{patient.email}</Typography>
                     </Box>
                   )}
-                  
+
                   {patient.diagnosis && (
                     <Typography variant="body2" color="text.secondary">
                       Диагноз: {patient.diagnosis}
@@ -331,9 +334,9 @@ const PatientListPage: React.FC = () => {
             <Button
               onClick={handleSubmit}
               variant="contained"
-              disabled={createMutation.isLoading || updateMutation.isLoading}
+              disabled={createMutation.isPending || updateMutation.isPending}
             >
-              {createMutation.isLoading || updateMutation.isLoading ? (
+              {createMutation.isPending || updateMutation.isPending ? (
                 <CircularProgress size={24} />
               ) : (
                 editingPatient ? 'Сохранить' : 'Добавить'
