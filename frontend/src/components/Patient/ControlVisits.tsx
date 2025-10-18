@@ -63,13 +63,13 @@ const ControlVisits: React.FC<ControlVisitsProps> = ({
     const [editingVisit, setEditingVisit] = useState<ControlVisit | null>(null);
     const [formData, setFormData] = useState({
         date: new Date().toISOString().split('T')[0],
-        type: 'routine' as const,
+        type: 'routine' as 'routine' | 'urgent' | 'follow_up' | 'emergency',
         doctor: '',
         purpose: '',
         findings: '',
         recommendations: '',
         nextVisit: '',
-        status: 'scheduled' as const,
+        status: 'scheduled' as 'scheduled' | 'completed' | 'cancelled' | 'rescheduled',
     });
 
     const handleOpen = () => {
@@ -111,20 +111,6 @@ const ControlVisits: React.FC<ControlVisitsProps> = ({
         setOpen(false);
     };
 
-    const getTypeColor = (type: string) => {
-        switch (type) {
-            case 'routine':
-                return 'primary';
-            case 'urgent':
-                return 'warning';
-            case 'follow_up':
-                return 'info';
-            case 'emergency':
-                return 'error';
-            default:
-                return 'default';
-        }
-    };
 
     const getTypeLabel = (type: string) => {
         switch (type) {
