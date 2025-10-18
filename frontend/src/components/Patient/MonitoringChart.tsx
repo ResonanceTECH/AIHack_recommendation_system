@@ -4,7 +4,6 @@ import {
   CardContent,
   Typography,
   Box,
-  Grid,
   Chip,
 } from '@mui/material';
 import {
@@ -54,7 +53,7 @@ const MonitoringChart: React.FC<MonitoringChartProps> = ({
             size="small"
           />
         </Box>
-        
+
         <Box sx={{ mb: 2 }}>
           <Typography variant="h4" color={isInRange ? 'success.main' : 'warning.main'}>
             {latestValue} {unit}
