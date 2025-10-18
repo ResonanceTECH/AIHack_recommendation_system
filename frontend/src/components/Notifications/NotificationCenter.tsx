@@ -4,7 +4,6 @@ import {
     IconButton,
     Badge,
     Menu,
-    MenuItem,
     Typography,
     List,
     ListItem,
@@ -38,17 +37,17 @@ interface Notification {
 }
 
 interface NotificationCenterProps {
-    notifications: Notification[];
-    onMarkAsRead: (id: string) => void;
-    onMarkAllAsRead: () => void;
-    onClearAll: () => void;
+    notifications?: Notification[];
+    onMarkAsRead?: (id: string) => void;
+    onMarkAllAsRead?: () => void;
+    onClearAll?: () => void;
 }
 
 const NotificationCenter: React.FC<NotificationCenterProps> = ({
-    notifications,
-    onMarkAsRead,
-    onMarkAllAsRead,
-    onClearAll,
+    notifications = [],
+    onMarkAsRead = () => { },
+    onMarkAllAsRead = () => { },
+    onClearAll = () => { },
 }) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
