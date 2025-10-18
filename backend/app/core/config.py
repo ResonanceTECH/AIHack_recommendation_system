@@ -7,8 +7,9 @@ class Settings(BaseSettings):
     VERSION: str = "1.0.0"
     API_V1_STR: str = "/api/v1"
     
-    # Database
-    DATABASE_URL: str = "postgresql://user:password@localhost/medai_db"
+    # Database (disabled for mock mode)
+    DATABASE_URL: str = "sqlite:///./mock.db"  # Using SQLite in-memory for mock mode
+    MOCK_MODE: bool = True  # Enable mock mode without real database
     
     # Security
     SECRET_KEY: str = "your-secret-key-here"
