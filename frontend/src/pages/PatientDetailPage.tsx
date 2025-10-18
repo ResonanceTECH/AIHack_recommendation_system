@@ -7,8 +7,6 @@ import {
   CardContent,
   Grid,
   Button,
-  Chip,
-  Divider,
   Tabs,
   Tab,
   Paper,
@@ -19,7 +17,6 @@ import {
   Assignment,
   Person,
   LocalHospital,
-  Timeline,
   Assessment,
   CheckCircle,
   Warning,
@@ -28,8 +25,6 @@ import {
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { patientApi, prescriptionApi } from '../services/api';
-import { Patient, Medication, Allergy, PreviousAnticoagulant } from '../types/patient';
-import { Prescription } from '../types/prescription';
 import Header from '../components/Layout/Header';
 import MedicalHistory from '../components/Patient/MedicalHistory';
 import ActivePrescriptions from '../components/Patient/ActivePrescriptions';
@@ -124,27 +119,23 @@ const PatientDetailPage: React.FC = () => {
     },
   ]);
 
-  const { data: patient, isLoading, error } = useQuery(
-    ['patient', id],
-    () => patientApi.getPatient(parseInt(id!)),
-    {
-      enabled: !!id,
-    }
-  );
+  const { data: patient, isLoading, error } = useQuery({
+    queryKey: ['patient', id],
+    queryFn: () => patientApi.getPatient(parseInt(id!)),
+    enabled: !!id,
+  });
 
-  const { data: prescriptions = [] } = useQuery(
-    ['prescriptions', id],
-    () => prescriptionApi.getPrescriptions(),
-    {
-      enabled: !!id,
-    }
-  );
+  const { data: prescriptions = [] } = useQuery({
+    queryKey: ['prescriptions', id],
+    queryFn: () => prescriptionApi.getPrescriptions(),
+    enabled: !!id,
+  });
 
   // Фильтруем назначения для данного пациента
   const patientPrescriptions = prescriptions.filter(p => p.patient_id === parseInt(id!));
   const activePrescriptions = patientPrescriptions.filter(p => p.status === 'active');
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
   };
 
@@ -338,7 +329,7 @@ const PatientDetailPage: React.FC = () => {
               aria-controls="patient-tabpanel-2"
             />
             <Tab
-              icon={<Timeline />}
+              icon={<Assignment />}
               label="История назначений"
               id="patient-tab-3"
               aria-controls="patient-tabpanel-3"
