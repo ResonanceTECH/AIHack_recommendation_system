@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Container,
   Typography,
@@ -18,7 +18,6 @@ import {
   Card,
   CardContent,
   Alert,
-  CircularProgress,
   FormControlLabel,
   Checkbox,
 } from '@mui/material';
@@ -29,9 +28,9 @@ import {
   Delete,
 } from '@mui/icons-material';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useQuery, useMutation, useQueryClient } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { patientApi } from '../services/api';
-import { Patient, Medication, Allergy, PreviousAnticoagulant } from '../types/patient';
+import { Medication, Allergy, PreviousAnticoagulant } from '../types/patient';
 import Header from '../components/Layout/Header';
 
 const steps = [
@@ -46,9 +45,8 @@ const steps = [
 const PrescriptionCreatePage: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const queryClient = useQueryClient();
   const [activeStep, setActiveStep] = useState(0);
-  const [selectedPatientId, setSelectedPatientId] = useState<number | null>(
+  const [selectedPatientId] = useState<number | null>(
     searchParams.get('patientId') ? parseInt(searchParams.get('patientId')!) : null
   );
 
@@ -83,7 +81,10 @@ const PrescriptionCreatePage: React.FC = () => {
   const [newAllergy, setNewAllergy] = useState<Partial<Allergy>>({});
   const [newAnticoagulant, setNewAnticoagulant] = useState<Partial<PreviousAnticoagulant>>({});
 
-  const { data: patients = [] } = useQuery('patients', patientApi.getPatients);
+  const { data: patients = [] } = useQuery({
+    queryKey: ['patients'],
+    queryFn: patientApi.getPatients
+  });
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -93,19 +94,6 @@ const PrescriptionCreatePage: React.FC = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const handleReset = () => {
-    setActiveStep(0);
-    setFormData({
-      patientId: null,
-      diagnosis: '',
-      comorbidities: [],
-      labResults: {},
-      currentMedications: [],
-      allergies: [],
-      previousAnticoagulants: [],
-      recommendations: [],
-    });
-  };
 
   const addComorbidity = () => {
     if (newComorbidity.trim()) {
@@ -275,7 +263,7 @@ const PrescriptionCreatePage: React.FC = () => {
             <Typography variant="h6" gutterBottom>
               Текущая терапия
             </Typography>
-            
+
             {/* Текущие медикаменты */}
             <Typography variant="subtitle1" gutterBottom>
               Принимаемые препараты
@@ -458,7 +446,7 @@ const PrescriptionCreatePage: React.FC = () => {
             <Typography variant="h6" gutterBottom>
               Дополнительные факторы
             </Typography>
-            
+
             {/* Образ жизни */}
             <Card sx={{ mb: 3 }}>
               <CardContent>
@@ -652,7 +640,7 @@ const PrescriptionCreatePage: React.FC = () => {
             >
               Сгенерировать рекомендации
             </Button>
-            
+
             {formData.recommendations.map((recommendation, index) => (
               <Card key={index} sx={{ mb: 2 }}>
                 <CardContent>
@@ -660,8 +648,8 @@ const PrescriptionCreatePage: React.FC = () => {
                     {recommendation.medication}
                   </Typography>
                   <Typography variant="body2" color="text.secondary" paragraph>
-                    Дозировка: {recommendation.dosage} | 
-                    Кратность: {recommendation.frequency} | 
+                    Дозировка: {recommendation.dosage} |
+                    Кратность: {recommendation.frequency} |
                     Длительность: {recommendation.duration}
                   </Typography>
                   <Typography variant="body2">
