@@ -19,7 +19,6 @@ import {
     TableContainer,
     TableHead,
     TableRow,
-    Paper,
     IconButton,
     Dialog,
     DialogTitle,
@@ -30,19 +29,16 @@ import {
 } from '@mui/material';
 import {
     Search,
-    FilterList,
     Visibility,
     Edit,
     Delete,
     Add,
     Assignment,
-    Refresh,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-import { useQuery, useMutation, useQueryClient } from 'react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { prescriptionApi, patientApi } from '../services/api';
 import { Prescription } from '../types/prescription';
-import { Patient } from '../types/patient';
 import Header from '../components/Layout/Header';
 
 const PrescriptionListPage: React.FC = () => {
@@ -57,19 +53,20 @@ const PrescriptionListPage: React.FC = () => {
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [prescriptionToDelete, setPrescriptionToDelete] = useState<number | null>(null);
 
-    const { data: prescriptions = [], isLoading, error } = useQuery(
-        'prescriptions',
-        prescriptionApi.getPrescriptions
-    );
+    const { data: prescriptions = [], isLoading, error } = useQuery({
+        queryKey: ['prescriptions'],
+        queryFn: prescriptionApi.getPrescriptions
+    });
 
-    const { data: patients = [] } = useQuery(
-        'patients',
-        patientApi.getPatients
-    );
+    const { data: patients = [] } = useQuery({
+        queryKey: ['patients'],
+        queryFn: patientApi.getPatients
+    });
 
-    const deleteMutation = useMutation(prescriptionApi.deletePrescription, {
+    const deleteMutation = useMutation({
+        mutationFn: prescriptionApi.deletePrescription,
         onSuccess: () => {
-            queryClient.invalidateQueries('prescriptions');
+            queryClient.invalidateQueries({ queryKey: ['prescriptions'] });
             setDeleteDialogOpen(false);
             setPrescriptionToDelete(null);
         },
@@ -80,7 +77,7 @@ const PrescriptionListPage: React.FC = () => {
         .filter((prescription) => {
             const matchesSearch =
                 prescription.recommended_medications?.some(med =>
-                    med.medication.toLowerCase().includes(searchTerm.toLowerCase())
+                    med.name.toLowerCase().includes(searchTerm.toLowerCase())
                 ) ||
                 prescription.instructions?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 patients.find(p => p.id === prescription.patient_id)?.full_name
@@ -99,8 +96,8 @@ const PrescriptionListPage: React.FC = () => {
                     comparison = new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
                     break;
                 case 'medication':
-                    const medA = a.recommended_medications?.[0]?.medication || '';
-                    const medB = b.recommended_medications?.[0]?.medication || '';
+                    const medA = a.recommended_medications?.[0]?.name || '';
+                    const medB = b.recommended_medications?.[0]?.name || '';
                     comparison = medA.localeCompare(medB);
                     break;
                 case 'patient':
@@ -319,7 +316,7 @@ const PrescriptionListPage: React.FC = () => {
                                                 </TableCell>
                                                 <TableCell>
                                                     <Typography variant="body2" fontWeight="medium">
-                                                        {prescription.recommended_medications?.[0]?.medication || 'Не указано'}
+                                                        {prescription.recommended_medications?.[0]?.name || 'Не указано'}
                                                     </Typography>
                                                     {prescription.is_ai_generated && (
                                                         <Chip
@@ -425,7 +422,7 @@ const PrescriptionListPage: React.FC = () => {
                                             <Card key={index} sx={{ mb: 2 }}>
                                                 <CardContent>
                                                     <Typography variant="h6">
-                                                        {med.medication}
+                                                        {med.name}
                                                     </Typography>
                                                     <Typography variant="body2" color="text.secondary">
                                                         Дозировка: {med.dosage} | Кратность: {med.frequency} | Длительность: {med.duration}
@@ -503,9 +500,9 @@ const PrescriptionListPage: React.FC = () => {
                             onClick={confirmDelete}
                             color="error"
                             variant="contained"
-                            disabled={deleteMutation.isLoading}
+                            disabled={deleteMutation.isPending}
                         >
-                            {deleteMutation.isLoading ? <CircularProgress size={24} /> : 'Удалить'}
+                            {deleteMutation.isPending ? <CircularProgress size={24} /> : 'Удалить'}
                         </Button>
                     </DialogActions>
                 </Dialog>
