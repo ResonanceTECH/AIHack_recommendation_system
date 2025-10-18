@@ -3,10 +3,11 @@ import { User, LoginCredentials, RegisterData, AuthResponse } from '../types/aut
 import { Patient, PatientCreate, PatientUpdate } from '../types/patient';
 import { Prescription, PrescriptionCreate, PrescriptionUpdate } from '../types/prescription';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000/api/v1';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
+  timeout: 10000, // 10 секунд таймаут
   headers: {
     'Content-Type': 'application/json',
   },
@@ -25,10 +26,21 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
+      console.error('Request timeout:', error.message);
+      return Promise.reject(new Error('Сервер не отвечает. Попробуйте позже.'));
+    }
+
     if (error.response?.status === 401) {
       localStorage.removeItem('token');
       window.location.href = '/login';
     }
+
+    if (error.response?.status >= 500) {
+      console.error('Server error:', error.response.data);
+      return Promise.reject(new Error('Ошибка сервера. Попробуйте позже.'));
+    }
+
     return Promise.reject(error);
   }
 );
@@ -38,7 +50,7 @@ export const authApi = {
     const formData = new FormData();
     formData.append('username', credentials.email);
     formData.append('password', credentials.password);
-    
+
     const response = await api.post('/auth/login', formData, {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
