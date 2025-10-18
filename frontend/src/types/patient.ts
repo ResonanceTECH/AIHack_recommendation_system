@@ -60,7 +60,7 @@ export interface PatientUpdate {
   age?: number;
   gender?: string;
   weight?: number;
-  height?: string;
+  height?: number;
   phone?: string;
   email?: string;
   diagnosis?: string;
@@ -124,4 +124,31 @@ export interface SocialFactors {
     caregiver: boolean;
     social_services: boolean;
   };
+}
+
+export interface ControlVisit {
+  id: number;
+  patient_id: number;
+  type: 'routine' | 'urgent' | 'follow_up' | 'emergency';
+  status: 'scheduled' | 'completed' | 'cancelled' | 'rescheduled';
+  scheduled_date: string;
+  completed_date?: string;
+  notes?: string;
+  doctor_id: number;
+  created_at: string;
+  updated_at?: string;
+}
+
+export interface SideEffect {
+  id: number;
+  patient_id: number;
+  medication: string;
+  description: string;
+  severity: 'mild' | 'moderate' | 'severe';
+  status: 'active' | 'monitoring' | 'resolved';
+  onset_date: string;
+  resolution_date?: string;
+  action_taken?: string;
+  created_at: string;
+  updated_at?: string;
 }
