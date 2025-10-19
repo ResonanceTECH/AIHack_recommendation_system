@@ -162,7 +162,7 @@ cp env.example .env
 # Отредактируйте .env файл
 
 # Запустите сервер
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
 #### 3. Запуск Frontend (React + Vite)
