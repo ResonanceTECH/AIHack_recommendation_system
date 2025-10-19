@@ -7,7 +7,6 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.3.2-3178c6.svg)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.104.1-009688.svg)
 ![Python](https://img.shields.io/badge/Python-3.11+-3776ab.svg)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-336791.svg)
 ![Docker](https://img.shields.io/badge/Docker-24.0+-2496ed.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 
