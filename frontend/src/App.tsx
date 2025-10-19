@@ -8,6 +8,7 @@ import PatientListPage from './pages/PatientListPage';
 import PatientDetailPage from './pages/PatientDetailPage';
 import PrescriptionCreatePage from './pages/PrescriptionCreatePage';
 import PrescriptionListPage from './pages/PrescriptionListPage';
+import AnalyticsPage from './pages/AnalyticsPage';
 import SettingsPage from './pages/SettingsPage';
 import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -57,6 +58,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <PrescriptionCreatePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/analytics"
+            element={
+              <ProtectedRoute>
+                <AnalyticsPage />
               </ProtectedRoute>
             }
           />

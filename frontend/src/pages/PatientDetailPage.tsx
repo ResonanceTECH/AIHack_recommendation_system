@@ -26,6 +26,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { patientApi, prescriptionApi } from '../services/api';
 import Header from '../components/Layout/Header';
+import BackButton from '../components/UI/BackButton';
 import MedicalHistory from '../components/Patient/MedicalHistory';
 import ActivePrescriptions from '../components/Patient/ActivePrescriptions';
 import PrescriptionHistory from '../components/Patient/PrescriptionHistory';
@@ -219,15 +220,11 @@ const PatientDetailPage: React.FC = () => {
     <Box>
       <Header />
       <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-        {/* Заголовок */}
+        <BackButton
+          onClick={() => navigate('/patients')}
+          text="Назад к списку пациентов"
+        />
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
-          <Button
-            startIcon={<ArrowBack />}
-            onClick={() => navigate('/patients')}
-            sx={{ mr: 2 }}
-          >
-            Назад к списку
-          </Button>
           <Typography variant="h4" component="h1">
             {patient.full_name}
           </Typography>

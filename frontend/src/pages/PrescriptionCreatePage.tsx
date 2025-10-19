@@ -26,12 +26,14 @@ import {
   Save,
   Add,
   Delete,
+  Download,
 } from '@mui/icons-material';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { patientApi } from '../services/api';
 import { Medication, Allergy, PreviousAnticoagulant } from '../types/patient';
 import Header from '../components/Layout/Header';
+import BackButton from '../components/UI/BackButton';
 
 const steps = [
   'Основные данные пациента',
@@ -164,19 +166,53 @@ const PrescriptionCreatePage: React.FC = () => {
   };
 
   const generateRecommendations = () => {
-    // Здесь будет логика генерации рекомендаций с помощью ИИ
-    const mockRecommendations = [
-      {
+    // Генерируем рекомендации на основе данных пациента
+    const patient = patients.find(p => p.id === formData.patientId);
+    if (!patient) return;
+
+    // Простая логика выбора рекомендации на основе возраста и диагноза
+    let recommendation;
+    if (patient.age >= 75 && patient.diagnosis?.includes('Фибрилляция')) {
+      recommendation = {
+        medication: 'Апиксабан',
+        dosage: '2,5 мг',
+        frequency: 'два раза в день',
+        duration: 'постоянно',
+        instructions: 'Принимать в одно и то же время',
+        evidenceLevel: 'A',
+        justification: 'Для пациента с фибрилляцией предсердий и пожилым возрастом рекомендуется апиксабан 2,5 мг два раза в день. Дозировка 2,5 мг соответствует инструкции для пациентов с факторами риска.',
+        contraindications: ['Активное кровотечение'],
+        sideEffects: ['Кровотечения', 'Тошнота']
+      };
+    } else if (patient.diagnosis?.includes('Тромбоз')) {
+      recommendation = {
+        medication: 'Ривароксабан',
+        dosage: '15 мг → 20 мг',
+        frequency: '2 раза в день → 1 раз в день',
+        duration: '3 недели → постоянно',
+        instructions: 'Принимать во время еды',
+        evidenceLevel: 'A',
+        justification: 'Для лечения ТГВ рекомендован ривароксабан с переходом дозировки.',
+        contraindications: ['Активное кровотечение'],
+        sideEffects: ['Кровотечения', 'Тошнота']
+      };
+    } else {
+      recommendation = {
         medication: 'Варфарин',
         dosage: '5 мг',
         frequency: '1 раз в день',
         duration: '3 месяца',
         instructions: 'Принимать в одно и то же время, контролировать МНО',
-      },
-    ];
+        evidenceLevel: 'A',
+        justification: 'Стандартная терапия антикоагулянтами с контролем МНО.',
+        contraindications: ['Активное кровотечение', 'Беременность'],
+        sideEffects: ['Кровотечения', 'Кожные реакции']
+      };
+    }
+
     setFormData({
       ...formData,
-      recommendations: mockRecommendations,
+      recommendations: [recommendation],
     });
   };
 
@@ -251,6 +287,18 @@ const PrescriptionCreatePage: React.FC = () => {
             <Typography variant="h6" gutterBottom>
               Лабораторные показатели
             </Typography>
+            <Button
+              variant="outlined"
+              color="primary"
+              startIcon={<Download />}
+              sx={{ mb: 2 }}
+              onClick={() => {
+                // Здесь будет логика экспорта данных из ЕМИАС
+                alert('Функция экспорта данных из ЕМИАС будет реализована');
+              }}
+            >
+              Экспорт данных из ЕМИАС
+            </Button>
             <Alert severity="info">
               Здесь будут поля для ввода лабораторных показателей
             </Alert>
@@ -670,18 +718,13 @@ const PrescriptionCreatePage: React.FC = () => {
     <Box>
       <Header />
       <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
-          <Button
-            startIcon={<ArrowBack />}
-            onClick={() => navigate('/dashboard')}
-            sx={{ mr: 2 }}
-          >
-            Назад
-          </Button>
-          <Typography variant="h4" component="h1">
-            Создание назначения
-          </Typography>
-        </Box>
+        <BackButton
+          onClick={() => navigate('/prescriptions')}
+          text="Назад к списку назначений"
+        />
+        <Typography variant="h4" component="h1" sx={{ mb: 4 }}>
+          Создание назначения
+        </Typography>
 
         <Paper sx={{ p: 3 }}>
           <Stepper activeStep={activeStep} alternativeLabel>

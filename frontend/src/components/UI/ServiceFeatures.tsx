@@ -17,8 +17,6 @@ import {
     Security,
     CheckCircle,
     TrendingUp,
-    Assignment,
-    Analytics,
 } from '@mui/icons-material';
 
 const ServiceFeatures: React.FC = () => {

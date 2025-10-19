@@ -34,6 +34,7 @@ import {
     Delete,
     Add,
     Assignment,
+    ContentCopy,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -172,9 +173,31 @@ const PrescriptionListPage: React.FC = () => {
         navigate(`/prescriptions/${id}/edit`);
     };
 
-    const handleDuplicate = (prescription: Prescription) => {
-        // Создаем копию назначения
-        navigate(`/prescriptions/new?duplicate=${prescription.id}`);
+    const handleDuplicate = async (prescription: Prescription) => {
+        try {
+            // Создаем копию назначения с новым ID
+            const duplicatedPrescription = {
+                ...prescription,
+                id: Date.now(), // Новый ID
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString(),
+                status: 'draft', // Ставим статус "черновик"
+            };
+
+            // Добавляем в localStorage
+            const prescriptions = JSON.parse(localStorage.getItem('prescriptions') || '[]');
+            prescriptions.push(duplicatedPrescription);
+            localStorage.setItem('prescriptions', JSON.stringify(prescriptions));
+
+            // Обновляем кэш
+            queryClient.invalidateQueries({ queryKey: ['prescriptions'] });
+
+            // Переходим к редактированию нового рецепта
+            navigate(`/prescriptions/${duplicatedPrescription.id}/edit`);
+        } catch (error) {
+            console.error('Ошибка при дублировании рецепта:', error);
+            alert('Ошибка при дублировании рецепта');
+        }
     };
 
     if (isLoading) {
@@ -362,7 +385,7 @@ const PrescriptionListPage: React.FC = () => {
                                                         onClick={() => handleDuplicate(prescription)}
                                                         title="Дублировать"
                                                     >
-                                                        <Assignment />
+                                                        <ContentCopy />
                                                     </IconButton>
                                                     <IconButton
                                                         size="small"
@@ -468,7 +491,18 @@ const PrescriptionListPage: React.FC = () => {
                                     Закрыть
                                 </Button>
                                 <Button
+                                    variant="outlined"
+                                    startIcon={<ContentCopy />}
+                                    onClick={() => {
+                                        setSelectedPrescription(null);
+                                        handleDuplicate(selectedPrescription);
+                                    }}
+                                >
+                                    Дублировать
+                                </Button>
+                                <Button
                                     variant="contained"
+                                    startIcon={<Edit />}
                                     onClick={() => {
                                         setSelectedPrescription(null);
                                         handleEdit(selectedPrescription.id);

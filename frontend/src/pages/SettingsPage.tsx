@@ -29,6 +29,7 @@ import {
 } from '@mui/icons-material';
 import { useAuth } from '../contexts/AuthContext';
 import Header from '../components/Layout/Header';
+import BackButton from '../components/UI/BackButton';
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -143,6 +144,10 @@ const SettingsPage: React.FC = () => {
         <Box>
             <Header />
             <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+                <BackButton
+                    onClick={() => window.history.back()}
+                    text="Назад"
+                />
                 <Typography variant="h4" component="h1" gutterBottom>
                     Настройки профиля
                 </Typography>

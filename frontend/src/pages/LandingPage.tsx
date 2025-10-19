@@ -9,8 +9,6 @@ import {
 import {
   LocalHospital,
   People,
-  Assignment,
-  Analytics,
   ArrowForward,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
