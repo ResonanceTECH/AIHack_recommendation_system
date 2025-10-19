@@ -10,7 +10,6 @@ import {
     ListItemText,
     Chip,
     LinearProgress,
-    Divider,
 } from '@mui/material';
 import {
     People,
@@ -20,12 +19,12 @@ import {
     CheckCircle,
     Assessment,
 } from '@mui/icons-material';
-import { Patient, Prescription } from '../types/patient';
-import { Prescription as PrescriptionType } from '../types/prescription';
+import { Patient } from '../../types/patient';
+import { Prescription } from '../../types/prescription';
 
 interface PatientAnalyticsProps {
     patients: Patient[];
-    prescriptions: PrescriptionType[];
+    prescriptions: Prescription[];
 }
 
 const PatientAnalytics: React.FC<PatientAnalyticsProps> = ({ patients, prescriptions }) => {
@@ -54,13 +53,13 @@ const PatientAnalytics: React.FC<PatientAnalyticsProps> = ({ patients, prescript
         }, {} as Record<string, number>);
 
         const topDiagnoses = Object.entries(diagnosisCounts)
-            .sort(([, a], [, b]) => b - a)
+            .sort(([, a], [, b]) => (b as number) - (a as number))
             .slice(0, 5);
 
         // Статистика по сопутствующим заболеваниям
         const comorbidityCounts = patients.reduce((acc, patient) => {
             if (patient.comorbidities) {
-                patient.comorbidities.forEach(comorbidity => {
+                patient.comorbidities.forEach((comorbidity: string) => {
                     acc[comorbidity] = (acc[comorbidity] || 0) + 1;
                 });
             }
@@ -68,7 +67,7 @@ const PatientAnalytics: React.FC<PatientAnalyticsProps> = ({ patients, prescript
         }, {} as Record<string, number>);
 
         const topComorbidities = Object.entries(comorbidityCounts)
-            .sort(([, a], [, b]) => b - a)
+            .sort(([, a], [, b]) => (b as number) - (a as number))
             .slice(0, 5);
 
         // Статистика по рецептам
@@ -83,7 +82,7 @@ const PatientAnalytics: React.FC<PatientAnalyticsProps> = ({ patients, prescript
         // Топ препаратов
         const medicationCounts = prescriptions.reduce((acc, prescription) => {
             if (prescription.recommended_medications) {
-                prescription.recommended_medications.forEach(med => {
+                prescription.recommended_medications?.forEach((med: any) => {
                     acc[med.name] = (acc[med.name] || 0) + 1;
                 });
             }
@@ -91,13 +90,13 @@ const PatientAnalytics: React.FC<PatientAnalyticsProps> = ({ patients, prescript
         }, {} as Record<string, number>);
 
         const topMedications = Object.entries(medicationCounts)
-            .sort(([, a], [, b]) => b - a)
+            .sort(([, a], [, b]) => (b as number) - (a as number))
             .slice(0, 5);
 
         // Статистика по аллергиям
         const allergyCounts = patients.reduce((acc, patient) => {
             if (patient.allergies) {
-                patient.allergies.forEach(allergy => {
+                patient.allergies?.forEach((allergy: any) => {
                     acc[allergy.allergen] = (acc[allergy.allergen] || 0) + 1;
                 });
             }
@@ -105,7 +104,7 @@ const PatientAnalytics: React.FC<PatientAnalyticsProps> = ({ patients, prescript
         }, {} as Record<string, number>);
 
         const topAllergies = Object.entries(allergyCounts)
-            .sort(([, a], [, b]) => b - a)
+            .sort(([, a], [, b]) => (b as number) - (a as number))
             .slice(0, 5);
 
         // Средний возраст
@@ -290,7 +289,7 @@ const PatientAnalytics: React.FC<PatientAnalyticsProps> = ({ patients, prescript
                                                         {diagnosis}
                                                     </Typography>
                                                     <Typography variant="body2" fontWeight="bold">
-                                                        {count}
+                                                        {count as number}
                                                     </Typography>
                                                 </Box>
                                             }
@@ -321,7 +320,7 @@ const PatientAnalytics: React.FC<PatientAnalyticsProps> = ({ patients, prescript
                                                         {comorbidity}
                                                     </Typography>
                                                     <Typography variant="body2" fontWeight="bold">
-                                                        {count}
+                                                        {count as number}
                                                     </Typography>
                                                 </Box>
                                             }
@@ -382,7 +381,7 @@ const PatientAnalytics: React.FC<PatientAnalyticsProps> = ({ patients, prescript
                                                         {medication}
                                                     </Typography>
                                                     <Typography variant="body2" fontWeight="bold">
-                                                        {count}
+                                                        {count as number}
                                                     </Typography>
                                                 </Box>
                                             }

@@ -4,7 +4,6 @@ import {
     CardContent,
     Typography,
     Box,
-    Button,
     Chip,
     Accordion,
     AccordionSummary,
@@ -19,16 +18,13 @@ import {
 import {
     ExpandMore,
     Psychology,
-    Warning,
-    Info,
-    CheckCircle,
 } from '@mui/icons-material';
 import { aiRecommendationExamples } from '../../services/mockData';
 
 const AIRecommendationExamples: React.FC = () => {
     const [expandedExample, setExpandedExample] = useState<number | false>(false);
 
-    const handleChange = (panel: number) => (event: React.SyntheticEvent, isExpanded: boolean) => {
+    const handleChange = (panel: number) => (_event: React.SyntheticEvent, isExpanded: boolean) => {
         setExpandedExample(isExpanded ? panel : false);
     };
 

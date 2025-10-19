@@ -22,7 +22,6 @@ import {
   Checkbox,
 } from '@mui/material';
 import {
-  ArrowBack,
   Save,
   Add,
   Delete,

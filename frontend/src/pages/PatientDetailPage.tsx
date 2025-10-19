@@ -12,7 +12,6 @@ import {
   Paper,
 } from '@mui/material';
 import {
-  ArrowBack,
   Edit,
   Assignment,
   Person,
