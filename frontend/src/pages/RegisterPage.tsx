@@ -70,7 +70,7 @@ const RegisterPage: React.FC = () => {
       await registerUser(registerData);
       navigate('/dashboard');
     } catch (err: any) {
-      setError(err.response?.data?.detail || 'Ошибка регистрации');
+      setError(err.message || 'Ошибка регистрации');
     } finally {
       setLoading(false);
     }

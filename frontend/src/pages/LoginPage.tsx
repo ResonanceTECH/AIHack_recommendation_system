@@ -40,6 +40,10 @@ const LoginPage: React.FC = () => {
     formState: { errors },
   } = useForm<LoginCredentials>({
     resolver: yupResolver(schema),
+    defaultValues: {
+      email: 'doctor1@medai.com',
+      password: 'password123'
+    }
   });
 
   const onSubmit = async (data: LoginCredentials) => {
@@ -49,7 +53,7 @@ const LoginPage: React.FC = () => {
       await login(data);
       navigate('/dashboard');
     } catch (err: any) {
-      setError(err.response?.data?.detail || 'Ошибка входа');
+      setError(err.message || 'Ошибка входа');
     } finally {
       setLoading(false);
     }
