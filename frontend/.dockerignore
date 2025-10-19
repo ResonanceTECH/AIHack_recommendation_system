@@ -6,9 +6,8 @@ README.md
 .env
 .nyc_output
 coverage
-.nyc_output
-.cache
-dist
-build
-.DS_Store
+.vscode
+.idea
 *.log
+dist
+.DS_Store

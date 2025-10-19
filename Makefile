@@ -19,7 +19,10 @@ help:
 	@echo "  prod-logs    - Show production logs"
 	@echo ""
 	@echo "General:"
-	@echo "  build        - Build all images"
+	@echo "  build        - Build all images with BuildKit"
+	@echo "  build-fast   - Build all images in parallel"
+	@echo "  build-frontend - Build only frontend"
+	@echo "  build-backend  - Build only backend"
 	@echo "  up           - Start all services"
 	@echo "  down         - Stop all services"
 	@echo "  restart      - Restart all services"
@@ -61,7 +64,16 @@ prod-restart:
 
 # General commands
 build:
-	docker-compose build
+	DOCKER_BUILDKIT=1 docker-compose build
+
+build-fast:
+	DOCKER_BUILDKIT=1 docker-compose build --parallel --no-cache
+
+build-frontend:
+	DOCKER_BUILDKIT=1 docker-compose build frontend
+
+build-backend:
+	DOCKER_BUILDKIT=1 docker-compose build backend
 
 up:
 	docker-compose up -d
